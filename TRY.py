@@ -48,10 +48,11 @@ class InputConect:
     def __init__(self):
         self.file_name = input('Введите название файла: ')
         self.filter_param = input('Введите название профессии: ')
+        self.print_param = input('Введите данные для печати:')
 
 
     @staticmethod
-    def print_data(dic_vacancies, vacancy_name):
+    def print_data(dic_vacancies, vacancy_name, print_param):
         years = []
         for vacancy in dic_vacancies:
             years.append(int(datetime.strptime(vacancy.published_at, '%Y-%m-%dT%H:%M:%S%z').strftime('%Y')))
@@ -108,8 +109,9 @@ class InputConect:
 
         report = Report(salary_by_years, vacs_by_years, vac_salary_by_years, vac_counts_by_years, salary_by_cities, vacs_by_cities, others_percentage, vacancy_name)
         Report.generate_excel(report)
-        Report.generate_image(report)
-        Report.generate_pdf(report)
+        if print_param == 'Статистика':
+            Report.generate_image(report)
+            Report.generate_pdf(report)
 
 class Report:
     def __init__(self, salary_by_years, vacs_by_years, vac_salary_by_years, vac_counts_by_years, salary_by_cities, vacs_by_cities, others_percentage, filter_param):
@@ -329,4 +331,4 @@ class Vacancy:
 
 parameters = InputConect()
 dataset = DataSet(parameters.file_name)
-InputConect.print_data(dataset.vacancies_objects, parameters.filter_param)
+InputConect.print_data(dataset.vacancies_objects, parameters.filter_param, parameters.print_param)
