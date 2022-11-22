@@ -48,7 +48,7 @@ class InputConect:
     def __init__(self):
         self.file_name = input('Введите название файла: ')
         self.filter_param = input('Введите название профессии: ')
-        self.print_param = input('Введите данные для печати:')
+        self.print_param = input('Введите данные для печати: ')
 
 
     @staticmethod
