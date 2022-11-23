@@ -241,7 +241,6 @@ class Report:
     def generate_pdf(report):
         vacancy_name = report.filter_param
         image_file = 'graph.png'
-
         options = {
             "enable-local-file-access": None
         }
