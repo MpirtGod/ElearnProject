@@ -100,12 +100,12 @@ class InputConect:
         others_percentage = sum(dict(list(vacs_by_cities.items())[11:]).values())
         vacs_by_cities = dict(list(vacs_by_cities.items())[:10])
 
-        print('Динамика уровня зарплат по годам:', salary_by_years)
-        print('Динамика количества вакансий по годам:', vacs_by_years)
-        print('Динамика уровня зарплат по годам для выбранной профессии:', vac_salary_by_years)
-        print('Динамика количества вакансий по годам для выбранной профессии:', vac_counts_by_years)
-        print('Уровень зарплат по городам (в порядке убывания):', salary_by_cities)
-        print('Доля вакансий по городам (в порядке убывания):', vacs_by_cities)
+        print('Динамика уровня зарплат по годам: ', salary_by_years)
+        print('Динамика количества вакансий по годам: ', vacs_by_years)
+        print('Динамика уровня зарплат по годам для выбранной профессии: ', vac_salary_by_years)
+        print('Динамика количества вакансий по годам для выбранной профессии: ', vac_counts_by_years)
+        print('Уровень зарплат по городам (в порядке убывания): ', salary_by_cities)
+        print('Доля вакансий по городам (в порядке убывания): ', vacs_by_cities)
 
         report = Report(salary_by_years, vacs_by_years, vac_salary_by_years, vac_counts_by_years, salary_by_cities, vacs_by_cities, others_percentage, vacancy_name)
         Report.generate_excel(report)
