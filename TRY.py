@@ -81,6 +81,7 @@ class InputConect:
                 area_dic[vacancy.area_name].append(vacancy.salary.salary_to_rub)
             else:
                 area_dic[vacancy.area_name] = [vacancy.salary.salary_to_rub]
+
         area_list = area_dic.items()
         area_list = [x for x in area_list if len(x[1]) / len(dic_vacancies)>0.01]
         area_list.sort(key=lambda item: sum(item[1]) / len(item[1]), reverse=True)
