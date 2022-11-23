@@ -112,6 +112,7 @@ class InputConect:
         if print_param == 'Статистика':
             Report.generate_image(report)
             Report.generate_pdf(report)
+        # changes
 
 class Report:
     def __init__(self, salary_by_years, vacs_by_years, vac_salary_by_years, vac_counts_by_years, salary_by_cities, vacs_by_cities, others_percentage, filter_param):
