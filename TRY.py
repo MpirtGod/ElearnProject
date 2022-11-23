@@ -83,9 +83,9 @@ class InputConect:
                 area_dic[vacancy.area_name] = [vacancy.salary.salary_to_rub]
 
         area_list = area_dic.items()
-        area_list = [x for x in area_list if len(x[1]) / len(dic_vacancies)>0.01]
+        area_list = [x for x in area_list if len(x[1]) / len(dic_vacancies) > 0.01]
         area_list.sort(key=lambda item: sum(item[1]) / len(item[1]), reverse=True)
-        salary_by_cities = {item[0] : int(sum(item[1]) / len(item[1])) for item in area_list[0: min(len(area_list),10)]}
+        salary_by_cities = {item[0]: int(sum(item[1]) / len(item[1])) for item in area_list[0: min(len(area_list), 10)]}
 
         vacs_dic = {}
         for vacancy in dic_vacancies:
@@ -235,7 +235,6 @@ class Report:
 
         plt.tight_layout()
         plt.savefig('graph.png')
-        # plt.show()
 
     @staticmethod
     def generate_pdf(report):
