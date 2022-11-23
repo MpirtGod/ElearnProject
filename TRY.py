@@ -188,6 +188,7 @@ class Report:
 
         wb.save('report.xlsx')
 
+
     @staticmethod
     def generate_image(report):
         width = 0.4
