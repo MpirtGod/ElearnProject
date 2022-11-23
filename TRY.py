@@ -52,7 +52,7 @@ class InputConect:
 
 
     @staticmethod
-    def print_data(dic_vacancies, vacancy_name, print_param):
+    def print_data(dic_vacancies, filter_param, print_param):
         years = []
         for vacancy in dic_vacancies:
             years.append(int(datetime.strptime(vacancy.published_at, '%Y-%m-%dT%H:%M:%S%z').strftime('%Y')))
@@ -68,7 +68,7 @@ class InputConect:
             year = int(datetime.strptime(vacancy.published_at, '%Y-%m-%dT%H:%M:%S%z').strftime('%Y'))
             salary_by_years[year].append(vacancy.salary.salary_to_rub)
             vacs_by_years[year] += 1
-            if vacancy_name in vacancy.name:
+            if filter_param in vacancy.name:
                 vac_salary_by_years[year].append(vacancy.salary.salary_to_rub)
                 vac_counts_by_years[year] += 1
 
@@ -107,7 +107,7 @@ class InputConect:
         print('Уровень зарплат по городам (в порядке убывания):', salary_by_cities)
         print('Доля вакансий по городам (в порядке убывания):', vacs_by_cities)
 
-        report = Report(salary_by_years, vacs_by_years, vac_salary_by_years, vac_counts_by_years, salary_by_cities, vacs_by_cities, others_percentage, vacancy_name)
+        report = Report(salary_by_years, vacs_by_years, vac_salary_by_years, vac_counts_by_years, salary_by_cities, vacs_by_cities, others_percentage, filter_param)
         Report.generate_excel(report)
         if print_param == 'Статистика':
             Report.generate_image(report)
