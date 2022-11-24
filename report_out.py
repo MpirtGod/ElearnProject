@@ -328,7 +328,7 @@ class Vacancy:
         self.area_name = area_name
         self.published_at = published_at
 
-
-parameters = InputConect()
-dataset = DataSet(parameters.file_name)
-InputConect.print_data(dataset.vacancies_objects, parameters.filter_param, parameters.print_param)
+def get_table():
+    parameters = InputConect()
+    dataset = DataSet(parameters.file_name)
+    InputConect.print_data(dataset.vacancies_objects, parameters.filter_param, parameters.print_param)
