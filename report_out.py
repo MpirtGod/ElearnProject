@@ -232,7 +232,7 @@ class Report:
         if report.others_percentage != 0:
             cities.insert(0,'Другие')
             percents.insert(0, 1-sum(percents))
-        plt.pie(percents, labels=cities, textprops={'fontsize': 6}, startangle= 90)
+        plt.pie(percents, labels=cities, textprops={'fontsize': 6}, startangle =90)
 
         plt.tight_layout()
         plt.savefig('graph.png')
@@ -241,6 +241,7 @@ class Report:
     def generate_pdf(report):
         vacancy_name = report.filter_param
         image_file = 'graph.png'
+
         options = {
             "enable-local-file-access": None
         }
