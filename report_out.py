@@ -71,7 +71,6 @@ class InputConect:
             if filter_param in vacancy.name:
                 vac_salary_by_years[year].append(vacancy.salary.salary_to_rub)
                 vac_counts_by_years[year] += 1
-
         salary_by_years = {key: int(sum(value)/ len(value)) if len(value) != 0 else 0 for key, value in salary_by_years.items()}
         vac_salary_by_years = {key: int(sum(value) / len(value)) if len(value) != 0 else 0 for key, value in vac_salary_by_years.items()}
 
