@@ -5,6 +5,17 @@ from datetime import datetime
 from prettytable import PrettyTable
 
 def Prepare(key, vacancy_string, columns_names):
+    """Подготавливает строку: убирает лишние пробелы, html-теги, заменяет \n на ; для дальнейшего split'а.
+
+    Args:
+        key (str): Название колонки на английском
+        vacancy_string (str): Значение колонки на английском с лишними пробелами и тегами
+        columns_names (list): Название колонок
+
+    Returns:
+        Tuple(str, str, list): Название колонки на русском, Значение колонки на русском без лишних пробелов и тегов,
+            Название колонок на русском
+    """
     if key != 'key_skills' and key != 'salary':
         vacancy_string = re.sub(r"<[^>]+>", '', vacancy_string)
         vacancy_string = "; ".join(vacancy_string.split('\n'))
@@ -13,6 +24,16 @@ def Prepare(key, vacancy_string, columns_names):
     return key, vacancy_string, columns_names
 
 def russificate(key, vacancy_string, columns_names):
+    """Переводит строки и названия вакансий на русский, формирует список колонок.
+
+    Args:
+        key (str): Название колонки на английском
+        vacancy_string (str): Значение колонки на английском
+        columns_names (list): Название колонок
+
+    Returns:
+        Tuple(str, str, list): Название колонки на русском, Значение колонки на русском, Название колонок на русском
+    """
     for substitution in dic_naming.keys():
         if vacancy_string == substitution:
             vacancy_string = dic_naming[substitution]
@@ -22,7 +43,27 @@ def russificate(key, vacancy_string, columns_names):
     return key, vacancy_string, columns_names
 
 class InputConect:
+    """Класс  отвечает за обработку параметров вводимых пользователем: фильтры, сортировка, диапазон вывода, требуемые столбцы, а также за печать таблицы на экран.
+
+        Attributes:
+            file_name (str): Название файла
+            filter_param (list): Параметр фильтрации(список из столбца и параметра фильрации)
+            sort_param (str): Параметр сортировки
+            reversed_sort (str): Обратный ли порядок сортировки
+            rows_print (list): Диапазон вывода(список из двух чисел)
+            columns_print (str): Требуемые столбцы
+    """
     def __init__(self):
+        """Инициализирует объект InputConect, запускает проверку правильности введенных данных.
+
+            Args:
+                file_name (str): Название файла
+                filter_param (list): Параметр фильтрации(список из столбца и параметра фильрации)
+                sort_param (str): Параметр сортировки
+                reversed_sort (str): Обратный ли порядок сортировки
+                rows_print (list): Диапазон вывода(список из двух чисел)
+                columns_print (str): Требуемые столбцы
+        """
         self.file_name = input('Введите название файла: ')
         self.filter_param = input('Введите параметр фильтрации: ').split(': ')
         self.sort_param = input('Введите параметр сортировки: ')
@@ -33,6 +74,13 @@ class InputConect:
 
     @staticmethod
     def check_data(filter_param, sort_param, reversed_sort):
+        """Проверяет введенные данные на правильность, при необходимости пишет ошибку и останавливает программу.
+
+            Args:
+                filter_param (list): Параметр фильтрации(список из столбца и параметра фильрации)
+                sort_param (str): Параметр сортировки
+                reversed_sort (str): Обратный ли порядок сортировки
+        """
         if len(filter_param) != 2 and filter_param != ['']:
             print('Формат ввода некорректен')
             exit()
@@ -48,6 +96,14 @@ class InputConect:
 
     @staticmethod
     def print_table(table, row_beg, row_fin, columns_to_print):
+        """Печатает таблицу со всеми введенными параметрами.
+
+            Args:
+                table (PrettyTable): Таблица
+                row_beg (int): Первая строка для вывода
+                row_fin (int): Последняя строка для вывода
+                columns_to_print (list): Список столбцов для печати
+        """
         table.hrules = 1
         table.align = 'l'
         if len(columns_to_print) == 0:
@@ -57,6 +113,20 @@ class InputConect:
 
     @staticmethod
     def prepare_table(dataset, filter_param, sort_param, reversed_sort, rows_print, columns_to_print):
+        """Подготавливает таблицу: применяет сортировку, обрезает длинные строки.
+
+            Args:
+                dataset (DataSet): Объект DataSet, содержащий инфу о вакансиях
+                filter_param (list): Параметр фильтрации(список из столбца и параметра фильрации)
+                sort_param (str): Параметр сортировки
+                reversed_sort (str): Обратный ли порядок сортировки
+                rows_print (list): Диапазон вывода(список из двух чисел)
+                columns_to_print (list): Требуемые столбцы
+
+            Returns:
+                tuple(MyTable, int, int, list): Таблица MyTable, первая строка для вывода, последняя строка для вывода,
+                    список колонок для вывода
+        """
         global mytable
         sort_index = 0
         mytable = PrettyTable()
@@ -70,7 +140,7 @@ class InputConect:
             beg, fin = None, None
         for vacancy in dataset.vacancies_objects:
             vacancy_without_key = []
-            formatted_row = InputConect.formatter(vacancy.__dict__, filter_param, sort_param)
+            formatted_row = InputConect.formatter(vacancy.__dict__, filter_param)
             if len(formatted_row) != 0:
                 is_empty = False
                 i = 0
@@ -110,7 +180,17 @@ class InputConect:
         return mytable, beg, fin, columns_to_print
 
     @staticmethod
-    def formatter(row, filter_param, sort_param):
+    def formatter(row, filter_param):
+        """Фильтрует вакансию.
+
+            Args:
+                row (dict): Словарь с одной вакансией
+                filter_param (list): Параметр фильтрации(список из столбца и параметра фильрации)
+
+            Returns:
+                dict: Возвращает вакансию, если она подходит под параметр фильтрации или пустой словарь если нет
+        """
+
         result = {}
         columns_names = []
         for key, vacancy_string in row.items():
@@ -154,6 +234,17 @@ class InputConect:
 
     @staticmethod
     def sort_table(all_vacancies, sort_param, reversed_sort, sort_index):
+        """Сортирует талицу.
+
+            Args:
+                all_vacancies (list): Список словарей с вакансиями
+                sort_param (list): Параметр фильтрации(список из столбца и параметра фильрации)
+                reversed_sort (str): Обратный ли порядок сортировки
+                sort_index (int): Индекс столбца по которому происходит сортировка
+
+            Returns:
+                list: Отсортированный список словарей с вакансиями
+        """
         reversed_sort = answer_to_bool[reversed_sort]
         if len(sort_param) == 0: return all_vacancies
         if sort_param == 'Оклад':
@@ -167,12 +258,32 @@ class InputConect:
 
 
 class DataSet:
+    """Класс отвечает за чтение и подготовку данных из CSV-файла.
+
+        Attributes:
+            file_name (str): Название файла
+            vacancies_objects (list): Список вакансий
+    """
     def __init__(self, file_name):
+        """Инициализирует объект DataSet.
+
+        Args:
+            file_name (str): Название файла
+            vacancies_objects (list): Список вакансий
+        """
         self.file_name = file_name
         self.vacancies_objects = DataSet.prepare_data(file_name)
 
     @staticmethod
     def prepare_data(file_name):
+        """Отбирает вакансии без пустых ячеек и составляет лист вакансий.
+
+        Args:
+            file_name (str): Название файла
+
+        Returns:
+            list: Лист, состоящий из вакансий.
+        """
         columns, vacancies = DataSet.csv_reader(file_name)
         processed = [x for x in vacancies if len(x) == len(columns) and '' not in x]
         people_data = []
@@ -191,6 +302,14 @@ class DataSet:
 
     @staticmethod
     def csv_reader(file_name):
+        """Считывает csv файл.
+
+        Args:
+            file_name (str): Название файла
+
+        Returns:
+            tuple: Кортеж, состоящий из названий колонок и всех вакансий.
+        """
         csv_read = csv.reader(open(file_name, encoding="utf_8_sig"))
         list_data = [x for x in csv_read]
         if len(list_data) == 1:
@@ -204,7 +323,24 @@ class DataSet:
         return columns, vacancies
 
 class Salary:
+    """Класс для представления зарплаты.
+
+    Attributes:
+        salary_from (str): Нижняя граница вилки оклада
+        salary_to (str): Верхняя граница вилки оклада
+        salary_gross (str): Инфо о том с вычитом ли налогов зп или нет
+        salary_currency (str): Валюта оклада
+    """
     def __init__(self, salary_from, salary_to, salary_gross, salary_currency):
+        """Инициализирует объект Salary.
+
+            Args:
+            salary_from (str): Нижняя граница вилки оклада
+            salary_to (str): Верхняя граница вилки оклада
+            salary_gross (str): Инфо о том с вычитом ли налогов зп или нет
+            salary_currency (str): Валюта оклада
+        """
+
         self.salary_from = salary_from
         self.salary_to = salary_to
         self.salary_gross = salary_gross
@@ -212,11 +348,47 @@ class Salary:
 
     @staticmethod
     def currency_to_rub(salary_from, salary_to, salary_currency):
+        """Вычисляет среднюю зарплату из вилки и переводит в рубли, при помощи словаря - currency_to_rub.
+
+                Args:
+                    salary_from (str): Нижняя вилка оклада
+                    salary_to (str): Верхняя вилка оклада
+                    salary_currency (str): Валюта оклада
+
+                Returns:
+                    float: Средняя зарплата в рублях
+                """
         return (float(salary_from)+float(salary_to))/2 * currency_to_rub[salary_currency]
 
 
 class Vacancy:
+    """Класс устанавливает все основные поля вакансии.
+
+        Attributes:
+            name (str): Название вакансии
+            description (str): Описание вакансии
+            key_skills (list): Навыки
+            experience_id (str): Опыт работы
+            premium (str): Информация о том премиум вакансия или нет
+            employer_name (str): Компания
+            salary (Salary): Комбинированная информация о зарплате
+            area_name (str): Название региона
+            published_at (str): Дата публикации вакансии
+    """
     def __init__(self, data_array):
+        """Инициализирует объект Vacancy.
+
+            Args:
+                name (str): Название вакансии
+                description (str): Описание вакансии
+                key_skills (list): Навыки
+                experience_id (str): Опыт работы
+                premium (str): Информация о том премиум вакансия или нет
+                employer_name (str): Компания
+                salary (Salary): Комбинированная информация о зарплате
+                area_name (str): Название региона
+                published_at (str): Дата публикации вакансии
+        """
         self.name = data_array[0]
         self.description = data_array[1]
         self.key_skills = data_array[2].split('; ')
@@ -296,6 +468,8 @@ experience_to_int = {
     }
 
 def get_table():
+    """Используется в main.py. Печатает таблицу.
+    """
     parameters = InputConect()
     dataset = DataSet(parameters.file_name)
     prepared_table = InputConect.prepare_table(dataset,parameters.filter_param,parameters.sort_param,parameters.reversed_sort,parameters.rows_print,parameters.columns_print)
