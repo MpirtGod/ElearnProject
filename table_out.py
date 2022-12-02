@@ -15,6 +15,15 @@ def Prepare(key, vacancy_string, columns_names):
     Returns:
         Tuple(str, str, list): Название колонки на русском, Значение колонки на русском без лишних пробелов и тегов,
             Название колонок на русском
+
+    >>> Prepare('name', 'TRUE', [])
+    ('Название', 'Да', ['Название'])
+    >>> Prepare('dadadadada', 'Рука', [])
+    ('dadadadada', 'Рука', ['dadadadada'])
+    >>> Prepare('', '', [])
+    ('', '', [''])
+    >>> Prepare('TRUE', 'name', [])
+    ('Да', 'Название', ['Да'])
     """
     if key != 'key_skills' and key != 'salary':
         vacancy_string = re.sub(r"<[^>]+>", '', vacancy_string)
@@ -185,7 +194,7 @@ class InputConect:
 
             Args:
                 row (dict): Словарь с одной вакансией
-                filter_param (list): Параметр фильтрации(список из столбца и параметра фильрации)
+                filter_param (list): Параметр фильтрации (список из столбца и параметра фильрации)
 
             Returns:
                 dict: Возвращает вакансию, если она подходит под параметр фильтрации или пустой словарь если нет
@@ -238,7 +247,7 @@ class InputConect:
 
             Args:
                 all_vacancies (list): Список словарей с вакансиями
-                sort_param (list): Параметр фильтрации(список из столбца и параметра фильрации)
+                sort_param (str): Параметр сортировки
                 reversed_sort (str): Обратный ли порядок сортировки
                 sort_index (int): Индекс столбца по которому происходит сортировка
 

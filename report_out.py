@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from jinja2 import Environment, FileSystemLoader
 import pdfkit
+import doctest
 
 
 class DictionariesData:
@@ -173,6 +174,17 @@ class Report:
 
         Returns:
             str: value конвертированное в строку.
+
+        >>> Report.as_text(None)
+        ''
+        >>> Report.as_text('')
+        ''
+        >>> type(Report.as_text(['Да', 'Нет'])).__name__
+        'str'
+        >>> type(Report.as_text({'Да': 'Нет'})).__name__
+        'str'
+        >>> Report.as_text('string')
+        'string'
         """
         if value is None:
             return ''
@@ -356,6 +368,17 @@ class DataSet:
 
         Returns:
             str: Очищенная строка
+
+        >>> DataSet.Prepare('<div>Привет</div>')
+        'Привет'
+        >>> DataSet.Prepare('f    f')
+        'f f'
+        >>> DataSet.Prepare('two\\nstrings')
+        'two; strings'
+        >>> DataSet.Prepare('')
+        ''
+        >>> DataSet.Prepare('abcabc')
+        'abcabc'
         """
         text = re.sub(r"<[^>]+>", '', text)
         text = "; ".join(text.split('\n'))
@@ -424,6 +447,15 @@ class Salary:
             salary_to (str or int or float): Верхняя граница вилки оклада
             salary_currency (str): Валюта оклада
             salary_to_rub (int): Средняя зарплата в рублях
+
+        >>> Salary(10.0, '20.0', 'RUR').salary_from
+        10.0
+        >>> Salary(10.0, '20.0', 'RUR').salary_to
+        '20.0'
+        >>> Salary('10.0', '20.0', 'RUR').salary_currency
+        'RUR'
+        >>> Salary('10.0', '20.0', 'EUR').salary_to_rub
+        898.5
         """
 
         self.salary_from = salary_from
@@ -436,12 +468,23 @@ class Salary:
         """Вычисляет среднюю зарплату из вилки и переводит в рубли, при помощи словаря - currency_to_rub.
 
         Args:
-            salary_from (str): Нижняя вилка оклада
-            salary_to (str): Верхняя вилка оклада
+            salary_from (str or int or float): Нижняя вилка оклада
+            salary_to (str or int or float): Верхняя вилка оклада
             salary_currency (str): Валюта оклада
 
         Returns:
             float: Средняя зарплата в рублях
+
+        >>> Salary.currency_to_rub('10.0', '20.0', 'EUR')
+        898.5
+        >>> Salary.currency_to_rub(10.0, '20.0', 'EUR')
+        898.5
+        >>> Salary.currency_to_rub('15.0', 15.0, 'EUR')
+        898.5
+        >>> Salary.currency_to_rub('15.0', 15.0, 'RUR')
+        15.0
+        >>> Salary.currency_to_rub('15', 15, 'RUR')
+        15.0
         """
         return (float(salary_from) + float(salary_to)) / 2 * DictionariesData.currency_to_rub[salary_currency]
 
