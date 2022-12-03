@@ -120,6 +120,12 @@ class InputConect:
         else:
             print(table[row_beg:row_fin].get_string(fields=['№'] + columns_to_print.split(", ")))
 
+
+    @staticmethod
+    def get_date(date):
+        return int(date[8:10]+'.'+date[5:7]+'.'+date[0:4])
+
+
     @staticmethod
     def prepare_table(dataset, filter_param, sort_param, reversed_sort, rows_print, columns_to_print):
         """Подготавливает таблицу: применяет сортировку, обрезает длинные строки.
@@ -174,7 +180,7 @@ class InputConect:
             if sort_param == 'Навыки':
                 vacancy.pop()
             if have_data:
-                vacancy[-1] = datetime.strptime(vacancy[-1], '%Y-%m-%dT%H:%M:%f%z').strftime('%d.%m.%Y')
+                vacancy[-1] = InputConect.get_date(vacancy[-1])
                 vacancy[-3].salary_from = '{:,}'.format(int(float(vacancy[-3].salary_from))).replace(',', ' ')
                 vacancy[-3].salary_to = '{:,}'.format(int(float(vacancy[-3].salary_to))).replace(',', ' ')
                 vacancy[-3] = f'{vacancy[-3].salary_from} - {vacancy[-3].salary_to} ({currency[vacancy[-3].salary_currency]}) ({dic_salary_gross[vacancy[-3].salary_gross]})'
@@ -216,7 +222,7 @@ class InputConect:
                 result[key] = vacancy_string
             elif key == 'Дата публикации вакансии':
                 result['Дата публикации вакансии'] = vacancy_string
-                date = datetime.strptime(vacancy_string, '%Y-%m-%dT%H:%M:%f%z').strftime('%d.%m.%Y')
+                date = InputConect.get_date(vacancy_string)
             else:
                 result[key] = vacancy_string
         flag = 0
