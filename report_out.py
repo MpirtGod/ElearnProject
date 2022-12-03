@@ -3,12 +3,10 @@ import re
 from datetime import datetime
 from openpyxl import Workbook
 from openpyxl.styles import Font, Border, Side, numbers
-import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from jinja2 import Environment, FileSystemLoader
 import pdfkit
-import doctest
 
 
 class DictionariesData:
@@ -64,6 +62,27 @@ class InputConect:
         self.file_name = input('Введите название файла: ')
         self.filter_param = input('Введите название профессии: ')
 
+
+    # @staticmethod
+    # def strptime_method(dic_vacancies):
+    #     years = []
+    #     for vacancy in dic_vacancies:
+    #         years.append(int(datetime.strptime(vacancy.published_at, '%Y-%m-%dT%H:%M:%S%z').strftime('%Y')))
+    #     return years
+
+    @staticmethod
+    def get_year(date):
+        return int(date[:4])
+
+
+    # @staticmethod
+    # def str_cut_with_split_method(dic_vacancies):
+    #     years = []
+    #     for vacancy in dic_vacancies:
+    #         years.append(int(vacancy.published_at.split('-')[0]))
+    #     return years
+
+    
     @staticmethod
     def print_data(dic_vacancies, filter_param):
         """Печатает статистику и вызывает методы для формирования графиков и отчетов.
@@ -74,8 +93,8 @@ class InputConect:
         """
         years = []
         for vacancy in dic_vacancies:
-            years.append(int(datetime.strptime(vacancy.published_at, '%Y-%m-%dT%H:%M:%S%z').strftime('%Y')))
-        years.sort()
+            years.append(InputConect.get_year(vacancy.published_at))
+        years_temp = years
         years = list(range(min(years), max(years) + 1))
 
         salary_by_years = {year: [] for year in years}
@@ -83,8 +102,8 @@ class InputConect:
         vac_salary_by_years = {year: [] for year in years}
         vac_counts_by_years = {year: 0 for year in years}
 
-        for vacancy in dic_vacancies:
-            year = int(datetime.strptime(vacancy.published_at, '%Y-%m-%dT%H:%M:%S%z').strftime('%Y'))
+        for i, vacancy in enumerate(dic_vacancies):
+            year = years_temp[i]
             salary_by_years[year].append(vacancy.salary.salary_to_rub)
             vacs_by_years[year] += 1
             if filter_param in vacancy.name:
