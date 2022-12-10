@@ -3,19 +3,20 @@ import pandas as pd
 from datetime import datetime
 import multiprocessing as mp
 import time
+import concurrent.futures as cf
 
 def get_year(date):
     return int(date[:4])
 
-def make_statistic(file, vacancy_name):
-    one_year_vacancies = pd.read_csv(file)
+def make_statistic(args):
+    one_year_vacancies = pd.read_csv(args['file'])
     one_year_vacancies['salary'] = one_year_vacancies[['salary_from', 'salary_to']].mean(axis=1)
-    year = int(file.name[-8:-4])
+    year = int(args['file'].name[-8:-4])
 
     salary_by_years = int(one_year_vacancies.salary.mean())
     vacs_by_years = one_year_vacancies.shape[0]
 
-    vac_mean = one_year_vacancies.loc[one_year_vacancies['name'].str.contains(vacancy_name)]['salary']
+    vac_mean = one_year_vacancies.loc[one_year_vacancies['name'].str.contains(args['vacancy_name'])]['salary']
     vac_counts_by_years = vac_mean.shape[0]
     vac_salary_by_years = int(vac_mean.mean())
     return year, salary_by_years, vacs_by_years, vac_salary_by_years, vac_counts_by_years
@@ -43,15 +44,17 @@ if __name__ == '__main__':
     filelist = [f_name for f_name in path_csv.glob('*.csv')]
     temp = []
     for file in filelist:
-        temp.append((file, vacancy_name))
-    start_time = time.time()
-    with mp.Pool(2) as p:
-        mp.freeze_support()
-        result_list = p.starmap(make_statistic, temp)
-        p.close()
-        p.join()
+        temp.append({'file': file, 'vacancy_name': vacancy_name})
+    # start_time = time.time()
+    # with mp.Pool(2) as p:
+    #     mp.freeze_support()
+    #     result_list = p.starmap(make_statistic, temp)
+    #     p.close()
+    #     p.join()
+    with cf.ProcessPoolExecutor(2) as executor:
+        result_list = executor.map(make_statistic, temp)
 
-    print("--- %s seconds ---" % (time.time() - start_time))
+    # print("--- %s seconds ---" % (time.time() - start_time))
 
     for result in result_list:
         salary_by_years[result[0]] = result[1]
