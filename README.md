@@ -29,3 +29,7 @@
 [part_2020.csv](https://github.com/MpirtGod/ElearnProject/files/10169011/part_2020.csv)
 [part_2021.csv](https://github.com/MpirtGod/ElearnProject/files/10169014/part_2021.csv)
 [part_2022.csv](https://github.com/MpirtGod/ElearnProject/files/10169015/part_2022.csv)
+Без многопоточности: 
+![1](https://user-images.githubusercontent.com/116442756/206854090-dff96cc0-3c6b-40de-928e-7017f08af587.png)
+С многопоточностью:
+![3](https://user-images.githubusercontent.com/116442756/206854107-a1e8253b-507c-4148-86c3-cbbc1791c58e.png)
