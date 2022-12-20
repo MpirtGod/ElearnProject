@@ -41,3 +41,7 @@ Multiprocessing:
 ![3](https://user-images.githubusercontent.com/116442756/206854107-a1e8253b-507c-4148-86c3-cbbc1791c58e.png)
 Concurrent futures:
 ![4](https://user-images.githubusercontent.com/116442756/206854865-3dd4161a-1acc-486e-864e-222e700c4575.png)
+
+Задание 3.3.1
+![1](https://user-images.githubusercontent.com/116442756/208743603-8199d381-848c-4200-9afa-fa6cf79f76b1.png)
+[currency_data.csv](https://github.com/MpirtGod/ElearnProject/files/10271307/currency_data.csv)
