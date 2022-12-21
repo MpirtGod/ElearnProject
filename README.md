@@ -44,4 +44,5 @@ Concurrent futures:
 
 Задание 3.3.1
 ![1](https://user-images.githubusercontent.com/116442756/208743603-8199d381-848c-4200-9afa-fa6cf79f76b1.png)
-[currency_data.csv](https://github.com/MpirtGod/ElearnProject/files/10271307/currency_data.csv)
+[currency_data.csv](https://github.com/MpirtGod/ElearnProject/files/10277042/currency_data.csv)
+
