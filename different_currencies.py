@@ -101,6 +101,5 @@ if __name__ == "__main__":
     currency_data = pd.concat(currency_data,axis=1)
     currency_data.to_csv('currency_data.csv')
     df = combine_salary_columns(df)
-    print(df.dtypes)
     # df.head(100).to_csv('first100vacancies.csv')
     df.to_csv('vacs_from_hh.csv')
